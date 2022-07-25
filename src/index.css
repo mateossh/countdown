@@ -44,5 +44,5 @@ input::-webkit-calendar-picker-indicator:hover {
 }
 
 button[type="submit"] {
-  @apply rounded-md mt-6 py-1.5 px-2.5 bg-blue-500 text-white shadow-md hover:shadow-lg
+  @apply rounded-md mt-6 py-1.5 px-2.5 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white shadow-md hover:shadow-lg focus:outline-none focus:ring focus:ring-blue-300
 }

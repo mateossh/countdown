@@ -43,11 +43,12 @@ function App() {
   }
 
   const timersListClasses = 'my-2';
-  const formInputWrapperClasses = 'w-full my-3';
+  const inputWrapperClasses = 'w-full my-3';
+  const inputErrorClasses = 'text-sm text-red-500 -mt-0.5';
 
   return (
     <div className="flex flex-col justify-center items-center h-screen text-center bg-slate-100">
-      <header className="py-4">
+      <header className="py-2">
         <p>countdown</p>
       </header>
 
@@ -82,7 +83,7 @@ function App() {
         >
           {({ errors, touched }) => (
             <Form className="my-8">
-              <div className={formInputWrapperClasses}>
+              <div className={inputWrapperClasses}>
                 <label
                   htmlFor="title"
                 >
@@ -93,10 +94,11 @@ function App() {
                   name="title"
                   placeholder="Title"
                 />
-                {errors.title && touched.title && <div>{errors.title}</div>}
+                {errors.title && touched.title &&
+                 <div className={inputErrorClasses}>{errors.title}</div>}
               </div>
 
-              <div className={formInputWrapperClasses}>
+              <div className={inputWrapperClasses}>
                 <label
                   htmlFor="date"
                 >
@@ -108,7 +110,8 @@ function App() {
                   placeholder="date"
                   type="datetime-local"
                 />
-                {errors.date && touched.date && <div>{errors.date}</div>}
+                {errors.date && touched.date &&
+                 <div className={inputErrorClasses}>{errors.date}</div>}
               </div>
 
               <button type="submit">Add timer</button>
