@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Formik, Field, Form, FormikHelpers } from 'formik'
 import './App.css'
-import { useForceUpdate } from './hooks'
 import { Timer as ITimer } from './types'
 import Timer from './Timer'
 
@@ -13,7 +12,20 @@ interface FormErrors {
 function App() {
   const [timers, setTimers] = useState<ITimer[]>([]);
 
-  const validate = (values: ITimer) => {
+  useEffect(() => {
+    const timers = localStorage.getItem('timers');
+
+    if (timers) {
+      setTimers(JSON.parse(timers));
+    }
+
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('timers', JSON.stringify(timers));
+  }, [timers]);
+
+  const validateForm = (values: ITimer) => {
     const errors: FormErrors = {};
 
     if (!values.title) {
@@ -38,15 +50,17 @@ function App() {
       </header>
 
       <div>
-        <ul>
-        {timers.map((timer: ITimer, key: number) => (
-          <Timer
-            key={key}
-            title={timer.title}
-            date={timer.date}
-          />
-        ))}
-        </ul>
+        {timers?.length == 0 && <div>No timers created :(</div>}
+
+        {timers?.length > 0 && <ul>
+          {timers.map((timer: ITimer, key: number) => (
+            <Timer
+              key={key}
+              title={timer.title}
+              date={timer.date}
+            />
+          ))}
+        </ul>}
 
         <Formik
           initialValues={{
@@ -57,14 +71,11 @@ function App() {
             values: ITimer,
             { resetForm }: FormikHelpers<ITimer>
           ) => {
-            console.log(`form submitted`);
-            console.log(values);
-
             const newTimer: ITimer = values;
             setTimers([...timers, newTimer]);
             resetForm();
           }}
-          validate={validate}
+          validate={validateForm}
         >
           {({ errors, touched }) => (
             <Form>
