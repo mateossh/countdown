@@ -46,6 +46,14 @@ function App() {
   const inputWrapperClasses = 'w-full my-3';
   const inputErrorClasses = 'text-sm text-red-500 -mt-0.5';
 
+  const removeTimer = (id: number) => {
+    console.log('hehehe remove timer', id);
+    const newTimers = [...timers];
+    newTimers.splice(id, 1);
+
+    setTimers(newTimers);
+  }
+
   return (
     <div className="flex flex-col justify-center items-center h-screen text-center bg-slate-100">
       <header className="py-2">
@@ -62,6 +70,7 @@ function App() {
               key={key}
               title={timer.title}
               date={timer.date}
+              onClick={() => { removeTimer(key) }}
             />
           ))}
         </ul>}
