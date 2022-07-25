@@ -13,9 +13,13 @@ function Timer({ title, date }: ITimer) {
     }
   }, [])
   
-  const countDateDiff = (date: string): string => {
+  // Returns tuple
+  // First element is human readable format
+  // Second element is string for <time> element with specific format
+  const countDateDiff = (date: string): [string, string] => {
     let diff = Date.parse(date) - Date.now();
-    let finalString = '';
+    let humanReadable = '';
+    let datetimeAttr = 'PT';
 
     diff = Math.abs(diff / 1000);
     const firstDiff = diff;
@@ -27,18 +31,33 @@ function Timer({ title, date }: ITimer) {
     const hours = Math.floor(diff % 24);
     const days = Math.floor(diff / 24);
 
-    if (firstDiff >= 60 * 60 * 24) finalString += `${days} days `;
-    if (firstDiff >= 60 * 60) finalString += `${hours} hours `;
-    if (firstDiff >= 60) finalString += `${minutes} minutes `;
-    finalString += `${seconds} seconds`;
+    if (firstDiff >= 60 * 60 * 24) humanReadable += `${days} days `;
+    if (firstDiff >= 60 * 60) humanReadable += `${hours} hours `;
+    if (firstDiff >= 60) humanReadable += `${minutes} minutes `;
+    humanReadable += `${seconds} seconds left`;
 
-    return finalString;
+
+    if (firstDiff >= 60 * 60 * 24) datetimeAttr += `${days}D`;
+    if (firstDiff >= 60 * 60) datetimeAttr += `${hours}H`;
+    if (firstDiff >= 60) datetimeAttr += `${minutes}M`;
+    datetimeAttr += `${seconds}S`;
+
+    console.log('countDateDiff', humanReadable, datetimeAttr);
+
+    return [humanReadable, datetimeAttr];
   }
 
+  const [longFormat, shortFormat] = countDateDiff(date);
+
   return (
-    <li>
-      <h3>{title}</h3>
-      <p>{countDateDiff(date)}</p>
+    <li className="my-4">
+      <h3 className="text-left">{title}</h3>
+      <time
+        dateTime={shortFormat}
+        className="text-gray-800"
+      >
+        {longFormat}
+      </time>
     </li>
   )
 }
