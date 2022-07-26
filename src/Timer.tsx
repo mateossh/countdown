@@ -9,6 +9,10 @@ const countDateDiff = (date: string): [string, string] => {
   let humanReadable = '';
   let datetimeAttr = 'PT';
 
+  if (diff < 0) {
+    return ['The wait is over!', ''];
+  }
+
   diff = Math.abs(diff / 1000);
   const firstDiff = diff;
 
