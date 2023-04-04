@@ -1,10 +1,20 @@
-import { useEffect } from 'react'
-import { useForceUpdate } from './hooks'
+import { useEffect, useState } from 'react';
 
-// Returns tuple
-// First element is human readable format
-// Second element is string for <time> element with specific format
-const countDateDiff = (date: string): [string, string] => {
+export type TimerFields = {
+  title: string;
+  date: string;
+};
+
+type TimerProps = TimerFields & {
+  onClick: Function;
+};
+
+export const useForceUpdate = () => {
+  const [, setValue] = useState(0);
+  return () => setValue((value) => ++value);
+};
+
+export const countDateDiff = (date: string): [string, string] => {
   let diff = Date.parse(date) - Date.now();
   let humanReadable = '';
   let datetimeAttr = 'PT';
@@ -40,25 +50,21 @@ const countDateDiff = (date: string): [string, string] => {
   datetimeAttr += `${seconds}S`;
 
   return [humanReadable, datetimeAttr];
-}
+};
 
-interface TimerProps {
-  title: string
-  date: string
-  onClick: Function
-}
-
-function Timer({ title, date, onClick }: TimerProps) {
+export function Timer({ title, date, onClick }: TimerProps) {
   const forceUpdate = useForceUpdate();
-  const [longFormat, shortFormat] = countDateDiff(date);
+  const [longDate, shortDate] = countDateDiff(date);
 
   useEffect(() => {
-    const updateInterval = setInterval(() => { forceUpdate() }, 1000);
+    const updateInterval = setInterval(() => {
+      forceUpdate();
+    }, 1000);
 
     return () => {
       clearInterval(updateInterval);
-    }
-  }, [])
+    };
+  }, []);
 
   return (
     <li className="my-6">
@@ -66,19 +72,19 @@ function Timer({ title, date, onClick }: TimerProps) {
         <h3 className="text-left">{title}</h3>
         <button
           className="text-xs"
-          onClick={() => {onClick()}}
+          onClick={() => {
+            onClick();
+          }}
         >
           X
         </button>
       </div>
       <time
-        dateTime={shortFormat}
+        dateTime={shortDate}
         className="block text-left text-testsize text-gray-500 -mt-0.5"
       >
-        {longFormat}
+        {longDate}
       </time>
     </li>
-  )
+  );
 }
-
-export default Timer
